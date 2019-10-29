@@ -25,12 +25,13 @@ messages = []
 likes = []
 comments = []
 comments2 = []
+zip_array = [75000,75001,75002,75003,75004,75005,75006,75007,75008,75009,75010,75011,75012,75013,75014,75015,75016,75017,75018,75019,75020]
 
 #seeding des villes
 nb_city.times do |x|
   city = City.create(
     name: Faker::Address.city,
-    zip_code: Faker::Address.zip_code)
+    zip_code: zip_array.sample)
   cities << city
   puts "Seeding vity nb#{x}"
 end
@@ -44,7 +45,7 @@ nb_user.times do |x|
     description: Faker::Lorem.paragraph,
     email: Faker::Internet.email,
     age: rand(16..80),
-    city_id: cities[rand(0..nb_city-1)].id)
+    city_id: cities.sample.id)
   users << user
   puts "Seeding user nb#{x}"
 end
@@ -52,9 +53,9 @@ end
 # Seed des gossips
 nb_gossip.times do |x|
   gossip = Gossip.create(
-      title: Faker::Book.title,
-      content: Faker::Lorem.paragraph,
-      user_id: users[rand(0..nb_user-1)].id)
+      title: Faker::Lorem.paragraph_by_chars(number: 10, supplemental: false),
+      content: Faker::Lorem.paragraph_by_chars(number: 50, supplemental: false),
+      user_id: users.sample.id)
   gossips << gossip
   puts "Seeding gossip nb#{x}"
 end
@@ -62,7 +63,7 @@ end
 #Seed des tags
 nb_tags.times do |x|
   tag = Tag.create(
-    title: Faker::Book.genre)
+    title: Faker::Lorem.paragraph_by_chars(number: 10, supplemental: false))
   tags << tag
   puts "Seeding tag nb#{x}"
 end
@@ -70,23 +71,23 @@ end
 #seed des gossip_tags (1 par gossip)
 nb_gossip.times do |x|
   GossipTag.create(
-      gossip_id: gossips[x],
-      tag_id: tags[rand(0..nb_tags-1)].id)
+      gossip_id: gossips[x].id,
+      tag_id: tags.sample.id)
   puts "Seeding a tag to the gossip nb#{x}"
 end
 
 #seed de tags supplementaires
 10.times do |x|
   GossipTag.create(
-      gossip_id: gossips[rand(0..nb_gossip-1)],
-      tag_id: tags[rand(0..nb_tags-1)].id)
+      gossip_id: gossips.sample.id,
+      tag_id: tags.sample.id)
   puts "Seeding a tag to the gossip nb#{x}"
 end
 
 #seeding des messages
 nb_messages.times do |x|
   message = PrivateMessage.create(
-    sender_id: users[rand(0..nb_user-1)].id,
+    sender_id: users.sample.id,
     content: Faker::Lorem.paragraph)
   messages << message
   puts "Seeding Private messages nb#{x}"
@@ -95,15 +96,15 @@ end
 nb_messages.times do |x|
   message = RecipientList.create(
     private_message_id: messages[x].id,
-    recipient_id: users[rand(0..nb_user-1)].id)
+    recipient_id: users.sample.id)
   messages << message
   puts "Seeding Recipient to Private messages nb#{x}"
 end
 #seeding des recipients
 nb_messages.times do |x|
   message = RecipientList.create(
-    private_message_id: messages[rand(0..nb_messages-1)].id,
-    recipient_id: users[rand(0..nb_user-1)].id)
+    private_message_id: messages.sample.id,
+    recipient_id: users.sample.id)
   messages << message
   puts "Seeding Random Recipients Recipient to Private messages nb#{x}"
 end
@@ -111,8 +112,8 @@ end
 nb_comments.times do |x|
   comment = Comment.create(
       content: Faker::Lorem.paragraph,
-      user_id: users[rand(0..nb_user-1)].id,
-      gossip_id: gossips[rand(0..nb_gossip-1)].id)
+      user_id: users.sample.id,
+      gossip_id: gossips.sample.id)
   comments << comment
   puts "Seeding comments to gossips nb#{x}"
 end
@@ -120,14 +121,16 @@ end
 #seeding des likes vers comments
 nb_likes.times do |x|
   like = Like.create(
-    comment_id: comments[rand(0..nb_comments-1)].id)
+    user_id: users.sample.id,
+    comment_id: comments.sample.id)
   likes << like
   puts "Seeding Random Recipients Recipient to Private messages nb#{x}"
 end
 #seeding des likes vers gossip
 nb_likes.times do |x|
   like = Like.create(
-    gossip_id: gossips[rand(0..nb_gossip-1)].id)
+    user_id: users.sample.id,
+    gossip_id: gossips.sample.id)
   likes << like
   puts "Seeding Random Recipients Recipient to Private messages nb#{x}"
 end
@@ -135,8 +138,8 @@ end
 nb_comments.times do |x|
   comment = Comment.create(
       content: Faker::Lorem.paragraph,
-      user_id: users[rand(0..nb_user-1)].id,
-      comment_id: comments[rand(0..nb_comments-1)].id)
+      user_id: users.sample.id,
+      comment_id: comments.sample.id)
   comments2 << comment
   puts "Seeding comments to comments of gossips nb#{x}"
 end
