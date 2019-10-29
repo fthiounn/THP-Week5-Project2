@@ -1,5 +1,11 @@
 <% content_for :title, "Home" %>
 
+<% if params[:notice] %>
+ <div class="alert alert-success">
+  <strong>Success!</strong> We added your Gossip to the database.
+</div>
+<% end %>
+
 <!-- JUMBOTRON HERO -->
 
 <div class="jumbotron-hero">

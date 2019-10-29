@@ -77,7 +77,7 @@ nb_gossip.times do |x|
 end
 
 #seed de tags supplementaires
-10.times do |x|
+50.times do |x|
   GossipTag.create(
       gossip_id: gossips.sample.id,
       tag_id: tags.sample.id)

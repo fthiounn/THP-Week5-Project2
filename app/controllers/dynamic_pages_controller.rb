@@ -10,6 +10,6 @@ class DynamicPagesController < ApplicationController
     params[:user] = User.find(params[:id])
     params[:city] = City.find(params[:user].city_id)
     params[:nb_gossips] = Gossip.where(user_id: params[:user].id).count
-    params[:nb_comments] = Gossip.where(user_id: params[:user].id).count
+    params[:nb_comments] = Comment.where(user_id: params[:user].id).count
   end
 end

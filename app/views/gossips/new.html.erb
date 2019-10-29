@@ -1,0 +1,32 @@
+<!-- DISPLAY DU FORMULAIRE -->
+<% content_for :title, "Add a Gossip" %>
+<!-- Affichage Stylisé du Gossip-->
+<% if !params[:gossip].nil? && params[:gossip].errors.any? %>
+	<div class="alert alert-danger">
+	  <p>We were not able to add your gossip for the following reasons :</p>
+	  <ul>
+	    <% params[:gossip].errors.full_messages.each do |message| %>
+	      <li><%= message %></li>
+	    <% end %>
+	  </ul>
+	</div>
+<% end %>
+
+
+<div class ='align-middle text-center'>
+	<div class="card m-5 p-5" style="height:300px">
+		<div class="card-body">
+			<form action= "<%= gossips_path %>" method="POST">
+				<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+				<h3> Enter a new Gossip !</h3>
+				<div class="row justify-content-center">
+					<p style = "width: 200px"> Title : <input type="text" name="gossip_title"></p>
+				</div>
+				<div class="row justify-content-center">
+				<p style = "width: 200px">Content : <input type="text" name="gossip_content"></p>
+				</div>
+			  <p><input type="submit" value="Valider"></p>
+			</form>		
+		</div>
+	</div>
+</div>
