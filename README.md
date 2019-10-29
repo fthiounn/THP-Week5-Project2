@@ -2,8 +2,6 @@
 # THP - Week 5 - Project 1 - The Gossip Project, les premières views
 # François THIOUNN
 
-
-
 # Notes & Use :
  -run in commandline from folder : 
  	- bundle install
@@ -15,75 +13,102 @@
 - team and contact page are bootstrat templates 
 
 
-#Projet : The Gossip Project, les premières views
+# Projet : Création d'un potin
   
-Note : le projet est à faire en pair-programming.
-
 1. Introduction
-Bienvenue dans ta première application Rails qui déchire ! Aujourd'hui tu vas commencer un projet qui te prendra toute la semaine : The Gossip Project. Nous allons te demander de reprendre le backend de la semaine dernière (en modifiant quelques éléments), puis tu vas ajouter les bons controllers, les bonnes vues, pour qu'à la fin de la semaine vous puissiez commérer en toute tranquilité.
-
-Voici le programme de la semaine :
-
-Aujourd'hui sera consacré aux premières pages de l'application : quelques pages statiques et les pages potins
-Demain sera consacré à la création d'un potin
-Mercredi sera consacré au CRUD complet des potins
-Jeudi sera consacré aux commentaires des potins, aux likes des potins, et à la gestion d'utilisateurs
-Vendredi sera consacré à l'identification des potins
-Ce programme consiste en gros à te faire ajouter les controllers et les vues aux models solides que tu as codés la semaine dernière. Comment ajouter du front aux bases de données. Puis la semaine prochaine nous verrons les techniques avancées, comme l'envoi d'email, la gestion des photos de profil, la gestion du front, afin que tu ressortes de ces trois semaines de Rails avec un rendu professionnel.
+Hello ! Aujourd'hui, on va rajouter une nouvelle fonctionnalité à The Gossip Project ! Tu vas reprendre le projet d'hier et appliquer ce que tu as vu aujourd'hui en mettant à disposition un formulaire pour créer des potins.
 
 2. Le projet
-Nous allons commencer aujourd'hui par créer les premières pages :
+2.1. Bases de données ?
+Tu te souviens de ce que tu avais vu sur les bases de données et les validations de models ? Eh bien nous allons voir si tu n'es pas trop rouillé à ce sujet 🔨 Rajoute, dans les models, des validations aux attributs importants (spoiler : quasi tous) de ton application.
 
-La page d'accueil, bien entendu. Cette page d'accueil affichera tous les potins créés
-La page qui présente l'équipe de The Gossip Project, aka toi et ton binome
-La page de contact où tu vas balancer une superbe adresse de contact
-Une page de bienvenue, qui accueille l'utilisateur en fonction du nom passé dans l'URL
-Dans la page d'accueil, il sera possible de cliquer sur chaque potin pour en "Voir plus", ce qui aura pour effet d'aller sur la page du potin.
+On va t'aider pour les validations du model des potins :
 
-Enfin, puisque c'est toi, nous allons mettre du CSS dans le site, grâce notamment à Bootstrap.
+la présence du title est obligatoire, ce dernier ne peut pas faire moins de 3 caractères ni plus de 14 caractères
+la présence du content est obligatoire
+2.2. Création de potin
+Cette partie sera la plus longue de la journée, car pour la première fois nous allons te faire jouer avec les controllers de Rails. C'est pas trop tôt ! ♥
 
-2.1. Les bases de l'application : installation et models
-Ce projet te suivra tout au long de cette semaine, mais nous allons te demander de ne pas perdre le rythme des migrations. Ainsi, nous allons te demander de créer une nouvelle application the-gossip-project (avec PostgreSQL), puis d'importer les migrations, models, et seed de l'ancien exercice. Cela permettra de te replonger en douceur dans le bain des bases de données sans te faire perdre trop de temps.
+À partir de la page d'accueil qui recense tous les potins, l'application va inviter l'utilisateur à enregistrer son propre potin. En cliquant sur un lien, il va se retrouver sur une page contenant un formulaire de création de potin. Ce formulaire va demander le titre du potin, ainsi que son contenu. Une fois soumis, le formulaire va enregistrer le potin en base et l'utilisateur va être redirigé vers la page d'accueil.
 
-2.2. Les premières pages : présentation et contact
-Tu vas devoir créer deux pages :
+Le principe de base est simple, mais nous allons le pimenter en te demandant d'implémenter quelques concepts nouveaux : le helper form_tag de Rails et les alertes.
 
-Une page team, qui présente l'équipe. Elle sera sur l'uri /team
-Une page contact, qui dit comment contacter l'équipe. Elle sera sur l'uri /contact
-Écris un truc simple dans la page, du genre : "voici notre équipe lol mdr 😇❤️😻" pour team par exemple.
+2.2.1. Préparation des routes, du controller et de la view
+Pour créer un potin, il est nécessaire d'avoir un controller gossips contenant les méthodes #new et #create.
+Il faut également les routes (en mode REST) qui pointent vers ces 2 méthodes.
+Pour finir, il te faut la view qui va afficher le formulaire : gossips/new.html.erb. À noter qu'il n'existe pas de view create.html.erb : la méthode #create renvoie vers l'index.
 
-2.3. Un peu de mise en forme SVP merci
-2.3.1. Du CSS
-Histoire de ne pas être trop pouilleux, nous allons te demander d'ajouter du CSS. Comment ajouter du CSS vous me dites ? Simple, va dans app/assets/stylesheets/application.css. Puis écris ton CSS en bas du document. Ce CSS concernera toute ton application.
+Je te laisse mettre tout ça en place !
+⚠️ Attention ⚠️ on l'a déjà dit mais à partir de maintenant on ne veut que des routes en resources ! Pas de route écrite à la main 👋
 
-On va rajouter un peu de css à cette app, en y mettant Bootstrap. La technique la plus simple et la plus réputée consiste à utiliser le CDN, et coller la ou les lignes de CDN dans le head de ton fichier app/views/layout/application.html.erb.
+2.2.2. Formulaire de création
+Maintenant que tu as ta view, et tes méthodes de prêtes, nous allons te demander de faire le formulaire de création de potins dans la view new.html.erb. En Rails, nous pouvons voir 4 types principaux de formulaires :
 
-2.3.2. Un header
-Ajoute un header dans toutes les pages de ton application. Celui que tu veux.
+Les formulaires HTML (on en a parlé dans la ressource)
+Les form_tag
+Les form_for
+Les formulaires via la gem simple_form
+Pour cet exercice, nous allons te demander d'utiliser form_tag, très adapté quand on débute. Nos amis de LaunchSchool ont fait un bon tuto sur form_tag, et tu peux checker la doc de form_tag.
 
-2.3.3. Des liens
-Maintenant, dans le header, mets-y les liens pour les pages team et contact.
+Ton formulaire doit demander le title ainsi que le content du potin que tu vas créer. Bien entendu, quand tu valides le formulaire, ce dernier doit partir à la méthode #create de ton controller de potins.
 
-2.4. URL cachée, la bienvenue ;)
-Cette partie sera un chouilla plus tricky, puisqu'elle te demandera de jouer avec les fameux params. Tu as entendu parler du principe des "Landing Pages", un truc cool avec une page adaptée à la cible potentielle qui viendrait sur ton application. Nous allons donc faire cela.
+2.2.3. Controller
+2.2.3.1. def create
+Maintenant que nous avons fait un formulaire qui demande ce que l'on veut récupérer, et qui l'envoie à la méthode #create de notre controller, il faut que ce dernier fasse son taff. Le résultat que l'on veut, en termes d'expérience utilisateur, est le suivant :
 
-En gros ce serait une page qui aurait une url du genre welcome/first_name, et quand la personne irait sur cette page, cette personne serait accueillie par un truc du genre :
+L'utilisateur est sur une magnifique page où il doit remplir un formulaire. Il le remplit et le soumet.
+De là, 2 cas sont possibles:
+Si le contenu du formulaire est accepté et que l'objet est bien créé en base, l'utilisateur est redirigé vers une nouvelle page HTML avec, en haut, un bandeau VERT disant un truc du genre "The super potin was succesfully saved !" (c'est ce qu'on appelle une alerte)
+Si le contenu du formulaire est refusé (objet non créé en base, car il manque un champ ou alors le contenu n'est pas valide, etc.), l'utilisateur retourne à nouveau sur la page du formulaire avec, en haut, un bandeau ROUGE disant un truc du genre "Error : you need to complete this field / the title must be at least 3 characters longue / etc." (c'est un autre type d'alerte)
+Le boulot de ton controller est d'arriver à coordonner ceci. En gros, il va faire la chose suivante :
 
-BIENVENUE first_name ! Ici c'est notre super site de potins, il est chouette, non ?
+Il va récupérer les informations du formulaire et essayer d'en faire une instance de ton model et de la sauver.
+le model va soit dire "tout va bien j'ai réussi à créer mon instance 👌"...
+… ou alors il va dire "ROLLBACK" "hey ! les validations ne sont pas passées, je te renvoie une ou plusieurs erreurs"
+Si l'instance est sauvegardée en base de données, le controller va rediriger vers la page index.
+Si le model n'arrive pas à sauvegarder ton instance, il va rester sur la page du formulaire pour que l'utilisateur ré-essaye de le remplir sans erreur.
+Pour la création d'une instance, un controller ne fera jamais plus. Rappelle-toi : Fat model Skinny controller. Son taf est de récupérer les informations, d'appeler les bons services, puis de faire les redirections.
 
-2.5. Page d'accueil : la liste des potins
-La page d'accueil doit souhaiter la bienvenue au visiteur, puis afficher les potins que l'on a en base, en n'affichant que leur author.first_name, et leur title. Évidemment, un lien vers la page d'accueil doit être mis dans le header de l'application.
+Bref, voici le squelette de la méthode #create :
 
-2.6. Afficher un potin
-Allez, dernier élément : la page qui affiche les potins. Chaque potin en base doit avoir une page dédiée, qui affiche les détails de son auteur (avec un lien pour aller sur la page de l'auteur), son title, son content, puis la date de création.
+def create
+  @gossip = Gossip.new(xxx) # avec xxx qui sont les données obtenues à partir du formulaire
 
-Enfin, sur la page d'accueil qui montre tous les potins, nous pourrons trouver pour chaque potin affiché le lien pour sa page.
+  if @gossip.save # essaie de sauvegarder en base @gossip
+    # si ça marche, il redirige vers la page d'index du site
+  else
+    # sinon, il render la view new (qui est celle sur laquelle on est déjà)
+  end
+end
+Pour info, ce squelette convient à environ 100 % des méthodes #create des controllers de Rails. N'essaie pas de sortir des clous de ce squelette, il y aurait 100 % de chance que ce soit faux 😉. Tout ce que tu veux mettre en plus devra aller dans le model.
 
-2.7. Afficher un utilisateur
-Sur chaque page potin, nous avons un lien pour afficher la page profil de son utilisateur. La page profil devra afficher les informations importantes de l'utilisateur.
+⚠️Pour le moment nous ne gérons pas l'authentification des utilisateurs. Or chaque potin doit avoir un auteur en base ! Pour palier à ça, nous allons faire une petite astuce : tu vas créer (en console) un utilisateur nommé anonymous puis faire en sorte que tous les potins créés dans la view new soient systématiquement associés à cet utilisateur.
 
-2.8. Un plus joli display
-Pour la page d'accueil, ce serait quand même plus sympa d'avoir les potins dans des cards bootstrap, non ? Puis n'hésite pas à regarder si tu vois d'autres éléments sympas à ajouter dans ton application 😉
+🤓 QUESTION RÉCURRENTE
+Dis donc Jamy, c'est quoi la différence entre redirect_to et render ? Pourquoi je fais l'un et pas l'autre ?
+redirect_to va passer par la route sélectionnée, donc ton app repart sur un controller, sa méthode, etc.
+Par contre render, ne fait qu'afficher une view tout en gardant les variables disponibles (notamment @gossip). Et ça, ça te permet de faire dans ta view :
+
+<% if @gossip.errors.any? %>
+  <p>Nous n'avons pas réussi à créer le potin pour la (ou les) raison(s) suivante(s) :</p>
+  <ul>
+    <% @gossip.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+Et cela affichera les erreurs que tu as si durement codées dans les validations de tes models 🙌
+
+Et voilà, maintenant on t'invite à remplir le controller et coder ta méthode create pour qu'elle fonctionne.
+Pour le moment, n'affiche pas d'alerte d'échec ou de réussite : on cherche juste à sauver en base puis renvoyer vers l'index en cas de succès ou recharger le formulaire en cas d'échec.
+Nous te laissons délibérément avec peu d'information, pour que tu cherches un peu sur le net comment tout articuler.
+
+2.2.3.2. Alerte générale
+Comme décrit plus haut, les alertes permettent de donner à l'utilisateur l'information qu'un formulaire a été soumis avec succès (un objet a été sauvé en base) ou bien qu'il y a eu un souci (l'utilisateur doit revoir le formulaire).
+
+Commence donc par afficher dans les views des petits messages qui informe l'utilisateur du succès (ou non) de son formulaire.
+
+Une fois que tu as fait cela, essaye d'afficher les messages dans une belle alerte Bootstrap. Maintenant il n'y a plus de doute : l'utilisateur sait quand il a réussi (alerte VERTE) ou quand ça a raté (alerte ROUGE).
 
 3. Rendu attendu
-Une application the_gossip_project qui affiche quelques pages statiques, un système de landing pages personnalisées, un index et un show de potins. Le tout avec Bootstrap et un header qui a les bons liens.
+Une amélioration de The Gossip Project : on peut enfin créer un potin sans passer par le seed ni la console !
